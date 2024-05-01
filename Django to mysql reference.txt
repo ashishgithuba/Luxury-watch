@@ -1,0 +1,110 @@
+CREATE TABLE Cart (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id_id INT,
+    watch_id_id INT,
+    quantity INT,
+    total_price INT,
+    FOREIGN KEY (user_id_id) REFERENCES User (user_id),
+    FOREIGN KEY (watch_id_id) REFERENCES Watch (id)
+);
+
+CREATE TABLE Address (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id_id INT,
+    address TEXT,
+    FOREIGN KEY (user_id_id) REFERENCES User (user_id)
+);
+
+CREATE TABLE Payment (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id_id INT,
+    cart_id_id INT,
+    address_id_id INT,
+    total_price INT,
+    FOREIGN KEY (user_id_id) REFERENCES User (user_id),
+    FOREIGN KEY (cart_id_id) REFERENCES Cart (id),
+    FOREIGN KEY (address_id_id) REFERENCES Address (id)
+);
+
+CREATE TABLE Order (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    payment_id_id INT,
+    user_id_id INT,
+    cart_id_id INT,
+    order_id INT,
+    total_price INT,
+    FOREIGN KEY (payment_id_id) REFERENCES Payment (id),
+    FOREIGN KEY (user_id_id) REFERENCES User (user_id),
+    FOREIGN KEY (cart_id_id) REFERENCES Cart (id)
+);
+
+User Migration
+CREATE TABLE User (
+    password VARCHAR(128) NOT NULL,
+    last_login DATETIME,
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(50) UNIQUE,
+    username VARCHAR(50)
+);
+
+Watch Migration 
+CREATE TABLE Watch (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    brand VARCHAR(100),
+    name VARCHAR(100),
+    description TEXT,
+    rating FLOAT,
+    price DECIMAL(10, 2),
+    year DATE
+);
+
+Cart and Address Migration 
+CREATE TABLE Cart (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    quantity INT,
+    total_price INT,
+    user_id INT,
+    watch_id BIGINT,
+    FOREIGN KEY (user_id) REFERENCES auth_user (id) ON DELETE CASCADE,
+    FOREIGN KEY (watch_id) REFERENCES authentication_watch (id) ON DELETE CASCADE
+);
+
+CREATE TABLE address (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    address TEXT,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES auth_user (id) ON DELETE CASCADE
+);
+
+Payment Migration 
+CREATE TABLE Payment (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    total_price INT,
+    address_id BIGINT,
+    cart_id BIGINT,
+    user_id INT,
+    FOREIGN KEY (address_id) REFERENCES authentication_address (id) ON DELETE CASCADE,
+    FOREIGN KEY (cart_id) REFERENCES authentication_cart (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES auth_user (id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE Order (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    total_price INT,
+    cart_id BIGINT,
+    payment_id BIGINT,
+    user_id INT,
+    FOREIGN KEY (cart_id) REFERENCES Cart (id) ON DELETE CASCADE,
+    FOREIGN KEY (payment_id) REFERENCES Payment (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES User (user_id) ON DELETE CASCADE
+);
+
+ALTER TABLE Watch
+ADD COLUMN quantity_available INT DEFAULT 0;
+
+ALTER TABLE Watch
+DROP COLUMN quantity_available;
+
+ALTER TABLE Watch
+ADD COLUMN more_description TEXT NOT NULL;
