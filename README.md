@@ -1,1 +1,2 @@
-# Luxury-watch
+# Luxury-watch Management Systems
+DMBS mini project
